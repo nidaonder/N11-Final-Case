@@ -1,6 +1,9 @@
 package com.nidaonder.UserService.service;
 
 import com.nidaonder.UserService.core.BaseService;
+import com.nidaonder.UserService.core.exception.ErrorMessage;
+import com.nidaonder.UserService.core.exception.ItemExistException;
+import com.nidaonder.UserService.core.exception.ItemNotFoundException;
 import com.nidaonder.UserService.dao.UserRepository;
 import com.nidaonder.UserService.dto.request.UserSaveRequest;
 import com.nidaonder.UserService.dto.request.UserUpdateRequest;
@@ -8,12 +11,15 @@ import com.nidaonder.UserService.dto.response.UserResponse;
 import com.nidaonder.UserService.entity.User;
 import com.nidaonder.UserService.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService implements BaseService<User, UserSaveRequest, UserUpdateRequest, UserResponse> {
 
     private final UserRepository userRepository;
@@ -26,13 +32,20 @@ public class UserService implements BaseService<User, UserSaveRequest, UserUpdat
 
     @Override
     public UserResponse findById(Long id) {
-        userRepository.findById(id);
-        return userMapper.entityToResponse(userRepository.findById(id).get());
+        return userMapper.entityToResponse(userRepository.findById(id)
+                .orElseThrow(() -> new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND)));
     }
 
     @Override
     public UserResponse save(UserSaveRequest request) {
-        return null;
+        Optional<User> user = userRepository.findByEmail(request.email());
+        if(user.isEmpty()){
+            User newUser = userMapper.requestToEntity(request);
+            userRepository.save(newUser);
+            log.info("User has been saved: {}", newUser);
+            return userMapper.entityToResponse(newUser);
+        }
+        throw new ItemExistException(ErrorMessage.ITEM_EXIST);
     }
 
     @Override
