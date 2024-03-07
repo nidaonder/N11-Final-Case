@@ -1,4 +1,4 @@
-package com.nidaonder.UserService.core;
+package com.nidaonder.UserService.core.exception;
 
 import java.io.Serializable;
 
