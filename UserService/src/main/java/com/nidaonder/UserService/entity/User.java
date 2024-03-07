@@ -56,15 +56,10 @@ public class User extends BaseEntity {
 
     @OneToMany(
             fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL,
+            cascade = CascadeType.REMOVE,
             mappedBy = "user"
     )
     @JsonIgnore
     private List<UserReview> userReviews;
-
-    /**
-     * böyle mi yoksa = new ArrayList demeli miyim emin değilim
-     * cascade type iki tarafta da yazdım ama öyle mi olmalı?
-    */
 
 }

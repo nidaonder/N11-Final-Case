@@ -32,20 +32,17 @@ public class UserReview extends BaseEntity {
     private String comment;
 
     @ManyToOne(
-            cascade = CascadeType.REMOVE,
             fetch = FetchType.LAZY
     )
     @JoinColumn(
             name = "ID_USER",
             foreignKey = @ForeignKey(
                     name = "FK_REVIEW_USER"
-            )
+            ),
+            nullable = false
     )
     private User user;
 
     @Column(name = "ID_RESTAURANT", nullable = false)
     private Long restaurantId;
 }
- /**
-  * user user kısmına notnull yazmalı mıyım?
-  */
