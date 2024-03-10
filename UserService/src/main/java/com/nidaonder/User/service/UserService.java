@@ -42,28 +42,38 @@ public class UserService implements BaseService<User, UserSaveRequest, UserUpdat
         Optional<User> user = userRepository.findByEmail(request.email());
         if(user.isEmpty()){
             User newUser = userMapper.requestToEntity(request);
+            newUser.setStatus(Status.ACTIVE);
             userRepository.save(newUser);
             log.info("User has been saved: {}", newUser);
             return userMapper.entityToResponse(newUser);
         }
         log.info("User e-mail address already used: {}", request.email());
         throw new ItemExistException(ErrorMessage.ITEM_EXIST);
-        // status kaydedilirken active olmalı !!!!!!!!!!!!!!!!!!!!!
     }
 
     @Override
     public UserResponse update(Long id, UserUpdateRequest request) {
-        return null;
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()){
+            User updatedUser = user.get();
+            userMapper.update(updatedUser, request);
+            userRepository.save(updatedUser);
+            log.info("User has been saved as updated: {}", updatedUser);
+            return userMapper.entityToResponse(updatedUser);
+        }
+        log.info("Failed to update user with ID '{}': User does not exist.", id);
+        throw new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND);
     }
 
     @Override
     public void deleteById(Long id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()){
-            User inactiveUser = user.get();
-            inactiveUser.setStatus(Status.INACTIVE);
-            userRepository.save(inactiveUser);
-            log.info("User has been deleted: {}", inactiveUser);
+            userRepository.deleteById(id);
+            log.info("User has been deleted: {}", user);
+        } else {
+            log.info("Failed to delete user with ID '{}': User does not exist.", id);
+            throw new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND);
         }
     }
 }

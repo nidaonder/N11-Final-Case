@@ -7,6 +7,6 @@ import com.nidaonder.User.dto.response.UserReviewResponse;
 import com.nidaonder.User.entity.UserReview;
 import org.mapstruct.Mapper;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface UserReviewMapper extends BaseMapper<UserReview, UserReviewSaveRequest, UserReviewUpdateRequest, UserReviewResponse> {
 }
