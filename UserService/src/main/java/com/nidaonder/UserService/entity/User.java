@@ -5,8 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.nidaonder.UserService.core.BaseEntity;
 import com.nidaonder.UserService.enums.Status;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,16 +29,25 @@ public class User extends BaseEntity {
     @Column(name = "ID")
     private Long id;
 
+    @NotBlank
     @Column(name = "NAME", length = 100, nullable = false)
     private String name;
 
+    @NotBlank
     @Column(name = "SURNAME", length = 100, nullable = false)
     private String surname;
 
+    @NotBlank
     @Email
     @Column(name = "EMAIL", length = 100, nullable = false)
     private String email;
 
+    @NotBlank
+    @Size(min = 8, max = 30)
+    @Column(name = "PASSWORD", length = 30, nullable = false)
+    private String password;
+
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "STATUS", length = 10, nullable = false)
     private Status status;
@@ -48,9 +56,11 @@ public class User extends BaseEntity {
     @Column(name = "BIRTH_DATE")
     private LocalDate birthDate;
 
+    @NotNull
     @Column(name = "LATITUDE", nullable = false)
     private Double latitude;
 
+    @NotNull
     @Column(name = "LONGITUDE", nullable = false)
     private Double longitude;
 

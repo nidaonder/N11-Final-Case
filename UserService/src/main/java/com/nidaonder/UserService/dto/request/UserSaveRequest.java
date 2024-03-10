@@ -1,17 +1,14 @@
 package com.nidaonder.UserService.dto.request;
 
-import com.nidaonder.UserService.enums.Status;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
 
 public record UserSaveRequest(
-        @NotNull @Size(max = 100) String name,
-        @NotNull @Size(max = 100) String surname,
-        @NotNull @Size(max = 100) @Email String email,
+        @NotBlank @Size(max = 100) String name,
+        @NotBlank @Size(max = 100) String surname,
+        @NotBlank @Size(max = 100) @Email String email,
+        @NotBlank @Size(min = 8, max = 30) String password,
 
         //@NotNull @Size(max = 10) Status status,@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         @Past LocalDate birthDate,

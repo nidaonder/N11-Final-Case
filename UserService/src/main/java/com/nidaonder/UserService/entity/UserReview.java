@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.nidaonder.UserService.core.BaseEntity;
 import com.nidaonder.UserService.enums.Score;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,7 @@ public class UserReview extends BaseEntity {
     @Column(name = "ID")
     private Long id;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "SCORE", length = 5, nullable = false)
     private Score score;
@@ -43,6 +45,7 @@ public class UserReview extends BaseEntity {
     )
     private User user;
 
+    @NotNull
     @Column(name = "ID_RESTAURANT", nullable = false)
     private Long restaurantId;
 }
