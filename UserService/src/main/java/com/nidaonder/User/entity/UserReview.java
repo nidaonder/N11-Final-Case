@@ -48,4 +48,15 @@ public class UserReview extends BaseEntity {
     @NotNull
     @Column(name = "ID_RESTAURANT", nullable = false)
     private Long restaurantId;
+
+    @Override
+    public String toString() {
+        return "UserReview{" +
+                "id=" + id +
+                ", score=" + score +
+                ", comment='" + comment + '\'' +
+                ", user=" + user +
+                ", restaurantId=" + restaurantId +
+                '}';
+    }
 }

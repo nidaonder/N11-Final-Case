@@ -72,4 +72,18 @@ public class User extends BaseEntity {
     @JsonIgnore
     private List<UserReview> userReviews;
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", status=" + status +
+                ", birthDate=" + birthDate +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                '}';
+    }
 }
