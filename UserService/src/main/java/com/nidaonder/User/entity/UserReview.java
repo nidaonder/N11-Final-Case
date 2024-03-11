@@ -27,7 +27,7 @@ public class UserReview extends BaseEntity {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "SCORE", length = 5, nullable = false)
+    @Column(name = "SCORE", length = 10, nullable = false)
     private Score score;
 
     @Column(name = "COMMENT")

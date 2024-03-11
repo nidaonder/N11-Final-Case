@@ -1,16 +1,16 @@
 package com.nidaonder.User.controller;
 
 import com.nidaonder.User.core.RestResponse;
+import com.nidaonder.User.dto.request.UserReviewSaveRequest;
+import com.nidaonder.User.dto.request.UserReviewUpdateRequest;
 import com.nidaonder.User.dto.response.UserReviewResponse;
 import com.nidaonder.User.service.UserReviewService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,5 +30,16 @@ public class UserReviewController {
     @GetMapping("/{id}")
     public ResponseEntity<RestResponse<UserReviewResponse>> getUserReviewById(@PathVariable @Positive Long id) {
         return ResponseEntity.ok(RestResponse.of(userReviewService.findById(id)));
+    }
+
+    @PostMapping
+    public ResponseEntity<RestResponse<UserReviewResponse>> saveUserReview(@Valid @RequestBody UserReviewSaveRequest request) {
+        return ResponseEntity.ok(RestResponse.of(userReviewService.save(request)));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<RestResponse<UserReviewResponse>> updateUserReview(@PathVariable @Positive Long id,
+                                                                             @Valid @RequestBody UserReviewUpdateRequest request) {
+        return ResponseEntity.ok(RestResponse.of(userReviewService.update(id, request)));
     }
 }

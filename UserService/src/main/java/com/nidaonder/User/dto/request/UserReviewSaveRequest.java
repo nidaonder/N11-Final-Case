@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record UserReviewSaveRequest(
-        @NotNull @Size(max = 5) Score score,
+        @NotNull Score score,
         String comment,
         @NotNull User user,
         @NotNull Long restaurantId

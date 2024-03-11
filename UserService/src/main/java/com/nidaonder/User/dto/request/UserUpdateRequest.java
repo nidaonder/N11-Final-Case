@@ -8,10 +8,6 @@ import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 
-/**
- *
- * gözden çeçir! update işlemleri için neler olmamalı?
- */
 public record UserUpdateRequest(
         @NotNull @Size(max = 100) String name,
         @NotNull @Size(max = 100) String surname,
