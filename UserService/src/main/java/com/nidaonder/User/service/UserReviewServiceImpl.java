@@ -33,8 +33,12 @@ public class UserReviewServiceImpl implements UserReviewService{
 
     @Override
     public UserReviewResponse findById(Long id) {
-        return userReviewMapper.entityToResponse(userReviewRepository.findById(id)
-                .orElseThrow(() -> new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND)));
+        Optional<UserReview> userReviewFromDb = userReviewRepository.findById(id);
+        if (userReviewFromDb.isEmpty()) {
+            log.info("User review with ID '{}' not found", id);
+            throw new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND);
+        }
+        return userReviewMapper.entityToResponse(userReviewFromDb.get());
     }
 
     @Override
