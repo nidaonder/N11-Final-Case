@@ -34,8 +34,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse findById(Long id) {
-        return userMapper.entityToResponse(userRepository.findById(id)
-                .orElseThrow(() -> new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND)));
+        Optional<User> userFromDb = userRepository.findById(id);
+        if (userFromDb.isEmpty()) {
+            log.info("User with ID '{}' not found", id);
+            throw new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND);
+        }
+        return userMapper.entityToResponse(userFromDb.get());
     }
 
     @Override
