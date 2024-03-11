@@ -21,7 +21,7 @@ public class UserReview extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_review")
-    @SequenceGenerator(name = "user_review", sequenceName = "USER_REVIEW_ID_SEQ")
+    @SequenceGenerator(name = "user_review", sequenceName = "USER_REVIEW_ID_SEQ", allocationSize = 1)
     @Column(name = "ID")
     private Long id;
 
