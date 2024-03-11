@@ -5,9 +5,7 @@ import com.nidaonder.User.core.exception.ItemNotFoundException;
 import com.nidaonder.User.dao.UserReviewRepository;
 import com.nidaonder.User.dto.request.UserReviewSaveRequest;
 import com.nidaonder.User.dto.request.UserReviewUpdateRequest;
-import com.nidaonder.User.dto.response.UserResponse;
 import com.nidaonder.User.dto.response.UserReviewResponse;
-import com.nidaonder.User.entity.User;
 import com.nidaonder.User.entity.UserReview;
 import com.nidaonder.User.mapper.UserReviewMapper;
 import lombok.RequiredArgsConstructor;
@@ -33,16 +31,17 @@ public class UserReviewServiceImpl implements UserReviewService{
 
     @Override
     public UserReviewResponse findById(Long id) {
-        Optional<UserReview> userReviewFromDb = userReviewRepository.findById(id);
-        if (userReviewFromDb.isEmpty()) {
+        Optional<UserReview> userReview = userReviewRepository.findById(id);
+        if (userReview.isEmpty()) {
             log.info("User review with ID '{}' not found", id);
             throw new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND);
         }
-        return userReviewMapper.entityToResponse(userReviewFromDb.get());
+        return userReviewMapper.entityToResponse(userReview.get());
     }
 
     @Override
     public UserReviewResponse save(UserReviewSaveRequest request) {
+        userService.findById(request.userId());//TODO Burda dönen değeri handle etmeli miyim boşsa throw atmalı mıyım zaten service bunu kontrol ediyor.
         UserReview newUserReview = userReviewMapper.requestToEntity(request);
         userReviewRepository.save(newUserReview);
         log.info("User review has been saved: {}", newUserReview);
@@ -56,14 +55,6 @@ public class UserReviewServiceImpl implements UserReviewService{
             log.info("Failed to update user review with ID '{}': User review does not exist!", id);
             throw new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND);
         }
-        UserResponse userFromDb = userService.findById(request.user().getId());
-        if (userFromDb == null){
-            log.info("Failed to update user review with ID '{}': User ID does not exist!", id);
-            throw new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND);
-        }
-
-        // TODO restaurant için de aynı kontroller yapılacak!!!!
-
         UserReview updatedUserReview = userReview.get();
         userReviewMapper.update(updatedUserReview, request);
         userReviewRepository.save(updatedUserReview);
@@ -73,12 +64,12 @@ public class UserReviewServiceImpl implements UserReviewService{
 
     @Override
     public void deleteById(Long id) {
-        Optional<UserReview> userReviewFromDb = userReviewRepository.findById(id);
-        if (userReviewFromDb.isEmpty()) {
+        Optional<UserReview> userReview = userReviewRepository.findById(id);
+        if (userReview.isEmpty()) {
             log.info("Failed to delete user review with ID '{}': User review does not exist.", id);
             throw new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND);
         }
         userReviewRepository.deleteById(id);
-        log.info("User review has been deleted: {}", userReviewFromDb);
+        log.info("User review has been deleted: {}", userReview);
     }
 }
