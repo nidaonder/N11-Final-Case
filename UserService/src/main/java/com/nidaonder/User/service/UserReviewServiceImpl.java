@@ -73,6 +73,12 @@ public class UserReviewServiceImpl implements UserReviewService{
 
     @Override
     public void deleteById(Long id) {
-
+        Optional<UserReview> userReviewFromDb = userReviewRepository.findById(id);
+        if (userReviewFromDb.isEmpty()) {
+            log.info("Failed to delete user review with ID '{}': User review does not exist.", id);
+            throw new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND);
+        }
+        userReviewRepository.deleteById(id);
+        log.info("User review has been deleted: {}", userReviewFromDb);
     }
 }

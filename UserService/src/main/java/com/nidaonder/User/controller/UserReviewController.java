@@ -42,4 +42,10 @@ public class UserReviewController {
                                                                              @Valid @RequestBody UserReviewUpdateRequest request) {
         return ResponseEntity.ok(RestResponse.of(userReviewService.update(id, request)));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<RestResponse> deleteUserReview(@PathVariable @Positive Long id) {
+        userReviewService.deleteById(id);
+        return ResponseEntity.ok(RestResponse.empty());
+    }
 }
