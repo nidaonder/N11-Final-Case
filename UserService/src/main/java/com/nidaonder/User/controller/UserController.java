@@ -2,6 +2,7 @@ package com.nidaonder.User.controller;
 
 import com.nidaonder.User.core.RestResponse;
 import com.nidaonder.User.dto.request.UserSaveRequest;
+import com.nidaonder.User.dto.request.UserUpdatePasswordRequest;
 import com.nidaonder.User.dto.request.UserUpdateRequest;
 import com.nidaonder.User.dto.response.UserResponse;
 import com.nidaonder.User.service.UserService;
@@ -41,6 +42,12 @@ public class UserController {
     public ResponseEntity<RestResponse<UserResponse>> updateUser(@PathVariable @Positive Long id,
                                                                  @Valid @RequestBody UserUpdateRequest request) {
         return ResponseEntity.ok(RestResponse.of(userService.update(id, request)));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<RestResponse<UserResponse>> updatePassword(@PathVariable @Positive Long id,
+                                                                     @Valid @RequestBody UserUpdatePasswordRequest request) {
+        return ResponseEntity.ok(RestResponse.of(userService.updatePassword(id, request)));
     }
 
     @DeleteMapping("/{id}")

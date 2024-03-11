@@ -5,6 +5,7 @@ import com.nidaonder.User.core.exception.ItemExistException;
 import com.nidaonder.User.core.exception.ItemNotFoundException;
 import com.nidaonder.User.dao.UserRepository;
 import com.nidaonder.User.dto.request.UserSaveRequest;
+import com.nidaonder.User.dto.request.UserUpdatePasswordRequest;
 import com.nidaonder.User.dto.request.UserUpdateRequest;
 import com.nidaonder.User.dto.response.UserResponse;
 import com.nidaonder.User.entity.User;
@@ -43,7 +44,6 @@ public class UserServiceImpl implements UserService {
             log.info("User e-mail address already used: {}", request.email());
             throw new ItemExistException(ErrorMessage.ITEM_EXIST);
         }
-
         User newUser = userMapper.requestToEntity(request);
         newUser.setStatus(Status.ACTIVE);
         userRepository.save(newUser);
@@ -69,6 +69,31 @@ public class UserServiceImpl implements UserService {
         userMapper.update(updatedUser, request);
         userRepository.save(updatedUser);
         log.info("User has been saved as updated: {}", updatedUser);
+        return userMapper.entityToResponse(updatedUser);
+    }
+
+    @Override
+    public UserResponse updatePassword(Long id, UserUpdatePasswordRequest request) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isEmpty()){
+            log.info("Failed to update user with ID '{}': User does not exist.", id);
+            throw new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND);
+        }
+        if (!user.get().getPassword().equals(request.oldPassword())){
+            log.info("eski şifre dogru degil");
+            throw new RuntimeException("eski parola yanlıs");
+        }
+        if (user.get().getPassword().equals(request.newPassword())){
+            log.info("eski sifre ve yeni sifre ayni olamaz");
+            throw new RuntimeException("eski ve yeni sifre ayni olamaz");
+        }
+        if (!request.newPassword().equals(request.newPasswordVerify())){
+            log.info("sifreler aynı degil");
+            throw new RuntimeException("yeni parolalar eslesmedi");
+        }
+        User updatedUser = user.get();
+        updatedUser.setPassword(request.newPassword());
+        userRepository.save(updatedUser);
         return userMapper.entityToResponse(updatedUser);
     }
 
