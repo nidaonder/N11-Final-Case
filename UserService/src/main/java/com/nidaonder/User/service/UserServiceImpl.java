@@ -1,5 +1,6 @@
 package com.nidaonder.User.service;
 
+import com.nidaonder.User.core.exception.BusinessException;
 import com.nidaonder.User.core.exception.ErrorMessage;
 import com.nidaonder.User.core.exception.ItemExistException;
 import com.nidaonder.User.core.exception.ItemNotFoundException;
@@ -42,7 +43,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> user = userRepository.findByEmail(request.email());
         if(user.isPresent()){
             log.info("User e-mail address already used: {}", request.email());
-            throw new ItemExistException(ErrorMessage.ITEM_EXIST);
+            throw new ItemExistException(ErrorMessage.ITEM_ALREADY_EXIST);
         }
         User newUser = userMapper.requestToEntity(request);
         newUser.setStatus(Status.ACTIVE);
@@ -62,7 +63,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> userByEmail = userRepository.findByEmail(request.email());
         if(userByEmail.isPresent() && !userByEmail.get().getId().equals(id)){
             log.info("Failed to update user with ID '{}': E-mail '{}' is already used by another user.", id, request.email());
-            throw new ItemExistException(ErrorMessage.ITEM_EXIST);
+            throw new ItemExistException(ErrorMessage.ITEM_ALREADY_EXIST);
         }
 
         User updatedUser = user.get();
@@ -80,20 +81,21 @@ public class UserServiceImpl implements UserService {
             throw new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND);
         }
         if (!user.get().getPassword().equals(request.oldPassword())){
-            log.info("eski şifre dogru degil");
-            throw new RuntimeException("eski parola yanlıs");
+            log.info("Update password failed for user with ID '{}': The current password is incorrect.", id);
+            throw new BusinessException(ErrorMessage.WRONG_PASSWORD);
         }
         if (user.get().getPassword().equals(request.newPassword())){
-            log.info("eski sifre ve yeni sifre ayni olamaz");
-            throw new RuntimeException("eski ve yeni sifre ayni olamaz");
+            log.info("Update password failed for user with ID '{}': The new password must be different from the current password.", id);
+            throw new BusinessException(ErrorMessage.NEW_PASSWORD_CANNOT_BE_SAME);
         }
         if (!request.newPassword().equals(request.newPasswordVerify())){
-            log.info("sifreler aynı degil");
-            throw new RuntimeException("yeni parolalar eslesmedi");
+            log.info("Update password failed for user with ID '{}': The new passwords do not match.", id);
+            throw new BusinessException(ErrorMessage.NEW_PASSWORDS_DO_NOT_MATCH);
         }
         User updatedUser = user.get();
         updatedUser.setPassword(request.newPassword());
         userRepository.save(updatedUser);
+        log.info("Password updated successfully for user with ID '{}'.", id);
         return userMapper.entityToResponse(updatedUser);
     }
 

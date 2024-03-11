@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @RequiredArgsConstructor
 @Getter
 @Setter
-@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+@ResponseStatus(HttpStatus.BAD_REQUEST)
 public class BusinessException extends RuntimeException{
 
     private final BaseErrorMessage baseErrorMessage;

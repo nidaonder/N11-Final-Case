@@ -38,4 +38,15 @@ public class GeneralControllerAdvice extends ResponseEntityExceptionHandler {
 
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler
+    public final ResponseEntity<Object> handleRTException(BusinessException e, WebRequest request) {
+        String message = e.getBaseErrorMessage().getMessage();
+        String description = request.getDescription(false);
+
+        var generalErrorMessage = new GeneralErrorMessage(LocalDateTime.now(), message, description);
+        var response = RestResponse.error(generalErrorMessage);
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
 }
