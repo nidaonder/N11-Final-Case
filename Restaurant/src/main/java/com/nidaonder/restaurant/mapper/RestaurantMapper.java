@@ -2,8 +2,10 @@ package com.nidaonder.restaurant.mapper;
 
 import com.nidaonder.restaurant.dto.RestaurantResponse;
 import com.nidaonder.restaurant.dto.RestaurantSaveRequest;
+import com.nidaonder.restaurant.dto.RestaurantUpdateRequest;
 import com.nidaonder.restaurant.entity.Restaurant;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
@@ -14,4 +16,5 @@ public interface RestaurantMapper {
     RestaurantSaveRequest entityToRequest(Restaurant restaurant);
     RestaurantResponse entityToResponse(Restaurant restaurant);
     Iterable<RestaurantResponse> entityToListResponse(Iterable<Restaurant> restaurants);
+    void update (@MappingTarget Restaurant targetEntity, RestaurantUpdateRequest updatingRequest);
 }

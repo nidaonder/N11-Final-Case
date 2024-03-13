@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface RestaurantService {
 
     Iterable<RestaurantResponse> findAll();
-    Optional<RestaurantResponse> findById(String id);
+    RestaurantResponse findById(String id);
     RestaurantResponse save(RestaurantSaveRequest request);
     RestaurantResponse update(String id, RestaurantUpdateRequest request);
     void delete(String id);

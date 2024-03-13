@@ -1,10 +1,7 @@
 package com.nidaonder.User.dto.request;
 
 import com.nidaonder.User.enums.Status;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
 
@@ -14,7 +11,7 @@ public record UserUpdateRequest(
         @NotNull @Size(max = 100) @Email String email,
         @NotNull @Size(max = 10) Status status,
         @Past LocalDate birthDate,
-        @NotNull Double latitude,
-        @NotNull Double longitude
+        @DecimalMin(value = "-90.0") @DecimalMax(value = "90.0") @NotNull Double latitude,
+        @DecimalMin(value = "-180.0") @DecimalMax(value = "180.0") @NotNull Double longitude
 ) {
 }

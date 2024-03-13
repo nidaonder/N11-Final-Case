@@ -9,10 +9,8 @@ public record UserSaveRequest(
         @NotBlank @Size(max = 100) String surname,
         @NotBlank @Size(max = 100) @Email String email,
         @NotBlank @Size(min = 8, max = 30) String password,
-
-        //@NotNull @Size(max = 10) Status status,@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         @Past LocalDate birthDate,
-        @NotNull Double latitude,
-        @NotNull Double longitude
+        @DecimalMin(value = "-90.0") @DecimalMax(value = "90.0") @NotNull Double latitude,
+        @DecimalMin(value = "-180.0") @DecimalMax(value = "180.0") @NotNull Double longitude
 ) {
 }
