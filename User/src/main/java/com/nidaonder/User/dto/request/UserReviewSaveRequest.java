@@ -7,6 +7,6 @@ public record UserReviewSaveRequest(
         @NotNull Score score,
         String comment,
         @NotNull Long userId,
-        @NotNull Long restaurantId
+        @NotNull String restaurantId
 ) {
 }

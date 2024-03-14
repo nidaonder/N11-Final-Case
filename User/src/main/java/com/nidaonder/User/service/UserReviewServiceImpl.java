@@ -43,6 +43,7 @@ public class UserReviewServiceImpl implements UserReviewService{
     public UserReviewResponse save(UserReviewSaveRequest request) {
         userService.findById(request.userId());//TODO Burda dönen değeri handle etmeli miyim boşsa throw atmalı mıyım zaten service bunu kontrol ediyor.
         UserReview newUserReview = userReviewMapper.requestToEntity(request);
+        //restorana git average score'ı güncelle
         userReviewRepository.save(newUserReview);
         log.info("User review has been saved: {}", newUserReview);
         return userReviewMapper.entityToResponse(newUserReview);

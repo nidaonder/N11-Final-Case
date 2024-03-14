@@ -47,7 +47,7 @@ public class UserReview extends BaseEntity {
 
     @NotNull
     @Column(name = "ID_RESTAURANT", nullable = false)
-    private Long restaurantId;
+    private String restaurantId;
 
     @Override
     public String toString() {

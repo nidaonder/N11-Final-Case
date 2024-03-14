@@ -8,6 +8,6 @@ public record UserReviewResponse (
         Score score,
         String comment,
         User user,
-        Long restaurantId
+        String restaurantId
 ){
 }
