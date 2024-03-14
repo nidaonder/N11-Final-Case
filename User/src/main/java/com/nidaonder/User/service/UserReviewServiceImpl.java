@@ -4,6 +4,7 @@ import com.nidaonder.User.client.RestaurantServiceClient;
 import com.nidaonder.User.core.exception.ErrorMessage;
 import com.nidaonder.User.core.exception.ItemNotFoundException;
 import com.nidaonder.User.dao.UserReviewRepository;
+import com.nidaonder.User.dto.request.RestaurantUpdateScoreRequest;
 import com.nidaonder.User.dto.request.UserReviewSaveRequest;
 import com.nidaonder.User.dto.request.UserReviewUpdateRequest;
 import com.nidaonder.User.dto.response.UserReviewResponse;
@@ -46,7 +47,8 @@ public class UserReviewServiceImpl implements UserReviewService{
         userService.findById(request.userId());//TODO Burda dönen değeri handle etmeli miyim boşsa throw atmalı mıyım zaten service bunu kontrol ediyor.
         UserReview newUserReview = userReviewMapper.requestToEntity(request);
         //restorana git average score'ı güncelle
-
+        restaurantServiceClient.addReviewAndUpdateAverageScore(request.restaurantId(), new RestaurantUpdateScoreRequest(request.score().getValue()));
+        log.info("Average score has been updated for related restaurant");
         userReviewRepository.save(newUserReview);
         log.info("User review has been saved: {}", newUserReview);
         return userReviewMapper.entityToResponse(newUserReview);

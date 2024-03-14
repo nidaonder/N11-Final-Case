@@ -42,9 +42,9 @@ public class RestaurantController {
         return ResponseEntity.ok(RestResponse.of(restaurantService.update(id, request)));
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/average-score/{id}")
     public ResponseEntity<RestResponse<RestaurantResponse>> addReviewAndUpdateAverageScore(@PathVariable String id,
-                                                                                           @RequestBody RestaurantUpdateScoreRequest request) {
+                                                                                           @RequestBody RestaurantUpdateScoreRequest request) { //TODO Burada requestimde tek field var doğrudan onu alsam olmaz mı
         return ResponseEntity.ok(RestResponse.of(restaurantService.addReviewAndUpdateAverageScore(id, request)));
     }
 
