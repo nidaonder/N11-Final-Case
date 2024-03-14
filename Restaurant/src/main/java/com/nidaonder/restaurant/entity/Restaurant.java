@@ -46,6 +46,10 @@ public class Restaurant extends BaseEntity {
     @DecimalMax(value = "180.0")
     private Double longitude;
 
+    @Indexed(name = "comment_count", type = "int")
+    @NotNull
+    private Integer commentCount;
+
     @Override
     public String toString() {
         return "Restaurant{" +
@@ -55,6 +59,7 @@ public class Restaurant extends BaseEntity {
                 ", averageScore=" + averageScore +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
+                ", commentCount=" + commentCount +
                 '}';
     }
 }

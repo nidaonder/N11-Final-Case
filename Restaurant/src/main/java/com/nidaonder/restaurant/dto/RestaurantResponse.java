@@ -5,5 +5,6 @@ public record RestaurantResponse(String id,
                                  String description,
                                  Double averageScore,
                                  Double latitude,
-                                 Double longitude) {
+                                 Double longitude,
+                                 Integer commentCount) {
 }

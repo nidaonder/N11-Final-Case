@@ -7,6 +7,7 @@ import com.nidaonder.restaurant.dao.RestaurantRepository;
 import com.nidaonder.restaurant.dto.RestaurantResponse;
 import com.nidaonder.restaurant.dto.RestaurantSaveRequest;
 import com.nidaonder.restaurant.dto.RestaurantUpdateRequest;
+import com.nidaonder.restaurant.dto.RestaurantUpdateScoreRequest;
 import com.nidaonder.restaurant.entity.Restaurant;
 import com.nidaonder.restaurant.mapper.RestaurantMapper;
 import lombok.RequiredArgsConstructor;
@@ -43,15 +44,18 @@ public class RestaurantServiceImpl implements RestaurantService{
     @Override
     public RestaurantResponse save(RestaurantSaveRequest request) {
         Optional<Restaurant> restaurant = restaurantRepository.findById(request.id());
+
         if (restaurant.isPresent()) {
             log.info("Restaurant ID already used: {}", request.id());
             throw new ItemExistException(ErrorMessage.ITEM_ALREADY_EXIST);
         }
-        Restaurant newRestaurant = restaurantMapper.requestToEntity(request);
-        restaurantRepository.save(newRestaurant);
 
+        Restaurant newRestaurant = restaurantMapper.requestToEntity(request);
+        newRestaurant.setAverageScore(0.0);
+        newRestaurant.setCommentCount(0);
         newRestaurant.setCreatedAt(LocalDateTime.now());//todo restaurantların base entity fieldları db ye gelmiyor.
         newRestaurant.setUpdatedAt(LocalDateTime.now());
+        restaurantRepository.save(newRestaurant);
         log.info("Restaurant has been saved: {}", newRestaurant);
         return restaurantMapper.entityToResponse(newRestaurant);
     }
@@ -65,9 +69,33 @@ public class RestaurantServiceImpl implements RestaurantService{
         }
         Restaurant updatedRestaurant = restaurant.get();
         restaurantMapper.update(updatedRestaurant, request);
-        restaurantRepository.save(updatedRestaurant);
         updatedRestaurant.setUpdatedAt(LocalDateTime.now());
+        restaurantRepository.save(updatedRestaurant);
         log.info("Restaurant has been saved as updated: {}", updatedRestaurant);
+        return restaurantMapper.entityToResponse(updatedRestaurant);
+    }
+
+    @Override
+    public RestaurantResponse addReviewAndUpdateAverageScore(String id, RestaurantUpdateScoreRequest request) {
+        Optional<Restaurant> restaurant = restaurantRepository.findById(id);
+        if (restaurant.isEmpty()) {
+            log.info("Failed to update average score, restaurant with ID '{}': Restaurant does not exist.", id);
+            throw new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND);
+        }
+
+        Restaurant updatedRestaurant = restaurant.get();
+        Double averageScore = updatedRestaurant.getAverageScore();
+        Integer commentCount = updatedRestaurant.getCommentCount();
+
+        Double newAverageScore = ((request.score() + (averageScore*commentCount)) / (commentCount + 1)) ;
+
+        commentCount++;
+        updatedRestaurant.setAverageScore(newAverageScore);
+        updatedRestaurant.setCommentCount(commentCount);
+        updatedRestaurant.setUpdatedAt(LocalDateTime.now());
+
+        restaurantRepository.save(updatedRestaurant);
+        log.info("Restaurant's average score has been updated: {}", updatedRestaurant);
         return restaurantMapper.entityToResponse(updatedRestaurant);
     }
 

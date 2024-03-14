@@ -4,6 +4,7 @@ import com.nidaonder.restaurant.core.RestResponse;
 import com.nidaonder.restaurant.dto.RestaurantResponse;
 import com.nidaonder.restaurant.dto.RestaurantSaveRequest;
 import com.nidaonder.restaurant.dto.RestaurantUpdateRequest;
+import com.nidaonder.restaurant.dto.RestaurantUpdateScoreRequest;
 import com.nidaonder.restaurant.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,12 @@ public class RestaurantController {
     public ResponseEntity<RestResponse<RestaurantResponse>> updateRestaurant(@PathVariable String id,
                                                                              @RequestBody @Valid RestaurantUpdateRequest request) {
         return ResponseEntity.ok(RestResponse.of(restaurantService.update(id, request)));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<RestResponse<RestaurantResponse>> addReviewAndUpdateAverageScore(@PathVariable String id,
+                                                                                           @RequestBody RestaurantUpdateScoreRequest request) {
+        return ResponseEntity.ok(RestResponse.of(restaurantService.addReviewAndUpdateAverageScore(id, request)));
     }
 
     @DeleteMapping("/{id}")

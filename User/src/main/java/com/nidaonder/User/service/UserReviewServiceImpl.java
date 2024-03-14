@@ -1,5 +1,6 @@
 package com.nidaonder.User.service;
 
+import com.nidaonder.User.client.RestaurantServiceClient;
 import com.nidaonder.User.core.exception.ErrorMessage;
 import com.nidaonder.User.core.exception.ItemNotFoundException;
 import com.nidaonder.User.dao.UserReviewRepository;
@@ -23,6 +24,7 @@ public class UserReviewServiceImpl implements UserReviewService{
     private final UserReviewRepository userReviewRepository;
     private final UserReviewMapper userReviewMapper;
     private final UserService userService;
+    private final RestaurantServiceClient restaurantServiceClient;
 
     @Override
     public List<UserReviewResponse> findAll() {
@@ -44,6 +46,7 @@ public class UserReviewServiceImpl implements UserReviewService{
         userService.findById(request.userId());//TODO Burda dönen değeri handle etmeli miyim boşsa throw atmalı mıyım zaten service bunu kontrol ediyor.
         UserReview newUserReview = userReviewMapper.requestToEntity(request);
         //restorana git average score'ı güncelle
+
         userReviewRepository.save(newUserReview);
         log.info("User review has been saved: {}", newUserReview);
         return userReviewMapper.entityToResponse(newUserReview);
