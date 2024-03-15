@@ -14,6 +14,6 @@ public interface RestaurantService {
     RestaurantResponse findById(String id);
     RestaurantResponse save(RestaurantSaveRequest request);
     RestaurantResponse update(String id, RestaurantUpdateRequest request);
-    RestaurantResponse addReviewAndUpdateAverageScore(String id, RestaurantUpdateScoreRequest request);
+    RestaurantResponse updateAverageScore(String id, RestaurantUpdateScoreRequest request);
     void delete(String id);
 }

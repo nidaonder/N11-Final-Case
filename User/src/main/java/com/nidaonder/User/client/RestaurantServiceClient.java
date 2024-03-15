@@ -13,7 +13,7 @@ public interface RestaurantServiceClient {
     @GetMapping
     ResponseEntity<RestResponse<Iterable<RestaurantResponse>>> getAllRestaurants();
 
-    @PutMapping("/average-score/{id}")
-    ResponseEntity<RestResponse<RestaurantResponse>> addReviewAndUpdateAverageScore(@PathVariable String id,
+    @PutMapping("/{id}/average-score")
+    ResponseEntity<RestResponse<RestaurantResponse>> updateAverageScore(@PathVariable String id,
                                                                                     @RequestBody RestaurantUpdateScoreRequest request);
 }

@@ -9,6 +9,7 @@ import com.nidaonder.User.dto.request.UserReviewSaveRequest;
 import com.nidaonder.User.dto.request.UserReviewUpdateRequest;
 import com.nidaonder.User.dto.response.UserReviewResponse;
 import com.nidaonder.User.entity.UserReview;
+import com.nidaonder.User.enums.AverageScoreUpdateType;
 import com.nidaonder.User.mapper.UserReviewMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,8 +47,11 @@ public class UserReviewServiceImpl implements UserReviewService{
     public UserReviewResponse save(UserReviewSaveRequest request) {
         userService.findById(request.userId());//TODO Burda dönen değeri handle etmeli miyim boşsa throw atmalı mıyım zaten service bunu kontrol ediyor.
         UserReview newUserReview = userReviewMapper.requestToEntity(request);
-        //restorana git average score'ı güncelle
-        restaurantServiceClient.addReviewAndUpdateAverageScore(request.restaurantId(), new RestaurantUpdateScoreRequest(request.score().getValue()));
+
+        restaurantServiceClient.updateAverageScore(
+                request.restaurantId(),
+                new RestaurantUpdateScoreRequest(request.score().getValue(), AverageScoreUpdateType.ADD));
+
         log.info("Average score has been updated for related restaurant");
         userReviewRepository.save(newUserReview);
         log.info("User review has been saved: {}", newUserReview);
@@ -62,6 +66,17 @@ public class UserReviewServiceImpl implements UserReviewService{
             throw new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND);
         }
         UserReview updatedUserReview = userReview.get();
+
+        if (updatedUserReview.getScore() != request.score()){
+            Integer scoreDifference = request.score().getValue() - updatedUserReview.getScore().getValue();
+
+            restaurantServiceClient.updateAverageScore(
+                    updatedUserReview.getRestaurantId(),
+                    new RestaurantUpdateScoreRequest(scoreDifference, AverageScoreUpdateType.UPDATE));
+
+            log.info("Average score has been updated for related restaurant");
+        }
+
         userReviewMapper.update(updatedUserReview, request);
         userReviewRepository.save(updatedUserReview);
         log.info("User review has been saved as updated: {}", updatedUserReview);
@@ -75,6 +90,12 @@ public class UserReviewServiceImpl implements UserReviewService{
             log.info("Failed to delete user review with ID '{}': User review does not exist.", id);
             throw new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND);
         }
+
+        restaurantServiceClient.updateAverageScore(
+                userReview.get().getRestaurantId(),
+                new RestaurantUpdateScoreRequest(userReview.get().getScore().getValue(), AverageScoreUpdateType.DELETE));
+
+        log.info("Average score has been updated for related restaurant");
         userReviewRepository.deleteById(id);
         log.info("User review has been deleted: {}", userReview);
     }

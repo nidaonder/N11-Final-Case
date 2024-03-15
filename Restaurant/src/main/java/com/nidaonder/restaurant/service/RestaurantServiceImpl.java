@@ -76,7 +76,7 @@ public class RestaurantServiceImpl implements RestaurantService{
     }
 
     @Override
-    public RestaurantResponse addReviewAndUpdateAverageScore(String id, RestaurantUpdateScoreRequest request) {
+    public RestaurantResponse updateAverageScore(String id, RestaurantUpdateScoreRequest request) {
         Optional<Restaurant> restaurant = restaurantRepository.findById(id);
         if (restaurant.isEmpty()) {
             log.info("Failed to update average score, restaurant with ID '{}': Restaurant does not exist.", id);
@@ -86,10 +86,23 @@ public class RestaurantServiceImpl implements RestaurantService{
         Restaurant updatedRestaurant = restaurant.get();
         Double averageScore = updatedRestaurant.getAverageScore();
         Integer commentCount = updatedRestaurant.getCommentCount();
+        Double newAverageScore = null;
+        switch (request.type()){
+            case ADD -> {
+                newAverageScore = ((request.score() + (averageScore * commentCount)) / (commentCount + 1)) ;
+                commentCount++;
+            }
+            case UPDATE -> {
+                newAverageScore = ((averageScore * commentCount) + request.score()) / commentCount;
+            }
+            case DELETE -> {
+                commentCount--;
+                newAverageScore = (commentCount > 0)
+                        ? ((averageScore * (commentCount + 1)) - request.score()) / commentCount
+                        : 0.0;
+            }
+        }
 
-        Double newAverageScore = ((request.score() + (averageScore*commentCount)) / (commentCount + 1)) ;
-
-        commentCount++;
         updatedRestaurant.setAverageScore(newAverageScore);
         updatedRestaurant.setCommentCount(commentCount);
         updatedRestaurant.setUpdatedAt(LocalDateTime.now());

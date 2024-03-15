@@ -1,4 +1,6 @@
 package com.nidaonder.restaurant.dto;
 
-public record RestaurantUpdateScoreRequest(Integer score) {
+import com.nidaonder.restaurant.enums.AverageScoreUpdateType;
+
+public record RestaurantUpdateScoreRequest(Integer score, AverageScoreUpdateType type) {
 }
