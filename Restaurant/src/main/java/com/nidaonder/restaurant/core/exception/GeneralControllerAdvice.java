@@ -1,6 +1,7 @@
 package com.nidaonder.restaurant.core.exception;
 
 import com.nidaonder.restaurant.core.RestResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -13,27 +14,36 @@ import java.time.LocalDateTime;
 
 @ControllerAdvice
 @RestController
+@Slf4j
 public class GeneralControllerAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler
     public final ResponseEntity<Object> handleItemNotFoundException(ItemNotFoundException e, WebRequest request) {
-        String message = e.getBaseErrorMessage().getMessage();
-        String description = request.getDescription(false);
-
-        var generalErrorMessage = new GeneralErrorMessage(LocalDateTime.now(), message, description);
-        var response = RestResponse.error(generalErrorMessage);
+        var response = getGeneralErrorMessageRestResponse(e.getBaseErrorMessage(), request);
 
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
     public final ResponseEntity<Object> handleItemExistException(ItemExistException e, WebRequest request) {
-        String message = e.getBaseErrorMessage().getMessage();
+        var response = getGeneralErrorMessageRestResponse(e.getBaseErrorMessage(), request);
+
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler
+    public final ResponseEntity<Object> handleAllException(GlobalException e, WebRequest request) {
+        var response = getGeneralErrorMessageRestResponse(e.getBaseErrorMessage(), request);
+
+        log.warn("Unexpected error occurred!");
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    private RestResponse<GeneralErrorMessage> getGeneralErrorMessageRestResponse(BaseErrorMessage e, WebRequest request) {
+        String message = e.getMessage();
         String description = request.getDescription(false);
 
         var generalErrorMessage = new GeneralErrorMessage(LocalDateTime.now(), message, description);
-        var response = RestResponse.error(generalErrorMessage);
-
-        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+        return RestResponse.error(generalErrorMessage);
     }
 }

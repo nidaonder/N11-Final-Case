@@ -10,7 +10,8 @@ public enum ErrorMessage implements BaseErrorMessage {
     ITEM_ALREADY_EXIST("Item exist!"),
     WRONG_PASSWORD("The current password is incorrect!"),
     NEW_PASSWORD_CANNOT_BE_SAME("The new password must be different from the current password!"),
-    NEW_PASSWORDS_DO_NOT_MATCH("The new passwords do not match!");
+    NEW_PASSWORDS_DO_NOT_MATCH("The new passwords do not match!"),
+    SOMETHING_WENT_WRONG("Something went wrong!!!");
 
 
     private final String message;
