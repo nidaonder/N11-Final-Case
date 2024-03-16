@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,7 +27,7 @@ public class RestaurantServiceImpl implements RestaurantService{
     private final RestaurantMapper restaurantMapper;
 
     @Override
-    public Iterable<RestaurantResponse> findAll() {
+    public List<RestaurantResponse> findAll() {
         return restaurantMapper.entityToListResponse(restaurantRepository.findAll());
     }
 
@@ -53,7 +53,7 @@ public class RestaurantServiceImpl implements RestaurantService{
         Restaurant newRestaurant = restaurantMapper.requestToEntity(request);
         newRestaurant.setAverageScore(0.0);
         newRestaurant.setCommentCount(0);
-        newRestaurant.setCreatedAt(LocalDateTime.now());//todo restaurantların base entity fieldları db ye gelmiyor.
+        newRestaurant.setCreatedAt(LocalDateTime.now());
         newRestaurant.setUpdatedAt(LocalDateTime.now());
         restaurantRepository.save(newRestaurant);
         log.info("Restaurant has been saved: {}", newRestaurant);

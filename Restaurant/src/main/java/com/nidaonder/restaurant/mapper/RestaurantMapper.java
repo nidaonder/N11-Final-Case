@@ -15,6 +15,6 @@ public interface RestaurantMapper {
     Restaurant responseToEntity(RestaurantResponse response);
     RestaurantSaveRequest entityToRequest(Restaurant restaurant);
     RestaurantResponse entityToResponse(Restaurant restaurant);
-    Iterable<RestaurantResponse> entityToListResponse(Iterable<Restaurant> restaurants);
+    List<RestaurantResponse> entityToListResponse(Iterable<Restaurant> restaurants);
     void update (@MappingTarget Restaurant targetEntity, RestaurantUpdateRequest updatingRequest);
 }
