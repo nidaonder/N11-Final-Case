@@ -14,7 +14,7 @@ public enum ErrorMessage implements BaseErrorMessage {
     WRONG_PASSWORD("The current password is incorrect!"),
     NEW_PASSWORD_CANNOT_BE_SAME("The new password must be different from the current password!"),
     NEW_PASSWORDS_DO_NOT_MATCH("The new passwords do not match!"),
-    SOMETHING_WENT_WRONG("Something went wrong!!!"),
+    SOMETHING_WENT_WRONG("Something went wrong while connecting restaurant service!"),
     EMAIL_ALREADY_IN_USE("This email is already in use!");
 
 
