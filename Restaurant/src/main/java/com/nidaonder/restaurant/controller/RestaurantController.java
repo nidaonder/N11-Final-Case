@@ -7,7 +7,6 @@ import com.nidaonder.restaurant.dto.RestaurantUpdateRequest;
 import com.nidaonder.restaurant.dto.RestaurantUpdateScoreRequest;
 import com.nidaonder.restaurant.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,35 +21,35 @@ public class RestaurantController {
     private final RestaurantService restaurantService;
 
     @GetMapping
-    public ResponseEntity<RestResponse<Iterable<RestaurantResponse>>> getAllRestaurants(){
-        return ResponseEntity.ok(RestResponse.of(restaurantService.findAll()));
+    public RestResponse<Iterable<RestaurantResponse>> getAllRestaurants(){
+        return RestResponse.of(restaurantService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RestResponse<RestaurantResponse>> getRestaurantById(@PathVariable String id) {
-        return ResponseEntity.ok(RestResponse.of(restaurantService.findById(id)));
+    public RestResponse<RestaurantResponse> getRestaurantById(@PathVariable String id) {
+        return RestResponse.of(restaurantService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<RestResponse<RestaurantResponse>> saveRestaurant(@RequestBody @Valid RestaurantSaveRequest request){
-        return ResponseEntity.ok(RestResponse.of(restaurantService.save(request)));
+    public RestResponse<RestaurantResponse> saveRestaurant(@RequestBody @Valid RestaurantSaveRequest request){
+        return RestResponse.of(restaurantService.save(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RestResponse<RestaurantResponse>> updateRestaurant(@PathVariable String id,
+    public RestResponse<RestaurantResponse> updateRestaurant(@PathVariable String id,
                                                                              @RequestBody @Valid RestaurantUpdateRequest request) {
-        return ResponseEntity.ok(RestResponse.of(restaurantService.update(id, request)));
+        return RestResponse.of(restaurantService.update(id, request));
     }
 
     @PutMapping("/{id}/average-score")
-    public ResponseEntity<RestResponse<RestaurantResponse>> updateAverageScore(@PathVariable String id,
-                                                                                           @RequestBody RestaurantUpdateScoreRequest request) {
-        return ResponseEntity.ok(RestResponse.of(restaurantService.updateAverageScore(id, request)));
+    public RestResponse<RestaurantResponse> updateAverageScore(@PathVariable String id,
+                                                                               @RequestBody RestaurantUpdateScoreRequest request) {
+        return RestResponse.of(restaurantService.updateAverageScore(id, request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<RestResponse> deleteRestaurant(@PathVariable String id) {
+    public RestResponse<Void> deleteRestaurant(@PathVariable String id) {
         restaurantService.delete(id);
-        return ResponseEntity.ok(RestResponse.empty());
+        return RestResponse.empty();
     }
 }

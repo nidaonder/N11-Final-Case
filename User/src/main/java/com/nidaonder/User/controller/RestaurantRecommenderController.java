@@ -5,7 +5,6 @@ import com.nidaonder.User.dto.response.RestaurantRecommenderResponse;
 import com.nidaonder.User.service.RestaurantRecommenderService;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,8 +22,8 @@ public class RestaurantRecommenderController {
     private final RestaurantRecommenderService restaurantRecommenderService;
 
     @GetMapping("/{userId}")
-    public ResponseEntity<RestResponse<List<RestaurantRecommenderResponse>>> getTopThreeRestaurants(
+    public RestResponse<List<RestaurantRecommenderResponse>> getTopThreeRestaurants(
             @PathVariable @Positive Long userId){
-        return ResponseEntity.ok(RestResponse.of(restaurantRecommenderService.getTopThreeNearbyRestaurants(userId)));
+        return RestResponse.of(restaurantRecommenderService.getTopThreeNearbyRestaurants(userId));
     }
 }
