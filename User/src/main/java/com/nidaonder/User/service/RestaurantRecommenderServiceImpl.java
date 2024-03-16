@@ -2,10 +2,8 @@ package com.nidaonder.User.service;
 
 import com.nidaonder.User.client.RestaurantService;
 import com.nidaonder.User.core.exception.ErrorMessage;
-import com.nidaonder.User.core.exception.GlobalException;
 import com.nidaonder.User.core.exception.ItemNotFoundException;
 import com.nidaonder.User.dto.response.RestaurantRecommenderResponse;
-import com.nidaonder.User.dto.response.RestaurantResponse;
 import com.nidaonder.User.dto.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
