@@ -3,6 +3,7 @@ package com.nidaonder.User.controller;
 import com.nidaonder.User.core.RestResponse;
 import com.nidaonder.User.dto.response.RestaurantRecommenderResponse;
 import com.nidaonder.User.service.RestaurantRecommenderService;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -23,7 +24,7 @@ public class RestaurantRecommenderController {
 
     @GetMapping("/{userId}")
     public ResponseEntity<RestResponse<List<RestaurantRecommenderResponse>>> getTopThreeRestaurants(
-            @PathVariable Long userId){
+            @PathVariable @Positive Long userId){
         return ResponseEntity.ok(RestResponse.of(restaurantRecommenderService.getTopThreeNearbyRestaurants(userId)));
     }
 }
