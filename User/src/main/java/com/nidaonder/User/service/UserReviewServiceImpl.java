@@ -38,14 +38,14 @@ public class UserReviewServiceImpl implements UserReviewService{
         Optional<UserReview> userReview = userReviewRepository.findById(id);
         if (userReview.isEmpty()) {
             log.info("User review with ID '{}' not found", id);
-            throw new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND);
+            throw new ItemNotFoundException(ErrorMessage.USER_REVIEW_NOT_FOUND);
         }
         return userReviewMapper.entityToResponse(userReview.get());
     }
 
     @Override
     public UserReviewResponse save(UserReviewSaveRequest request) {
-        userService.findById(request.userId());//TODO Burda dönen değeri handle etmeli miyim boşsa throw atmalı mıyım zaten service bunu kontrol ediyor.
+        userService.checkUserExists(request.userId());
         UserReview newUserReview = userReviewMapper.requestToEntity(request);
 
         restaurantServiceClient.updateAverageScore(
@@ -63,7 +63,7 @@ public class UserReviewServiceImpl implements UserReviewService{
         Optional<UserReview> userReview = userReviewRepository.findById(id);
         if (userReview.isEmpty()) {
             log.info("Failed to update user review with ID '{}': User review does not exist!", id);
-            throw new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND);
+            throw new ItemNotFoundException(ErrorMessage.USER_REVIEW_NOT_FOUND);
         }
         UserReview updatedUserReview = userReview.get();
 
@@ -88,7 +88,7 @@ public class UserReviewServiceImpl implements UserReviewService{
         Optional<UserReview> userReview = userReviewRepository.findById(id);
         if (userReview.isEmpty()) {
             log.info("Failed to delete user review with ID '{}': User review does not exist.", id);
-            throw new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND);
+            throw new ItemNotFoundException(ErrorMessage.USER_REVIEW_NOT_FOUND);
         }
 
         restaurantServiceClient.updateAverageScore(

@@ -36,7 +36,7 @@ public class RestaurantServiceImpl implements RestaurantService{
         Optional<Restaurant> restaurant = restaurantRepository.findById(id);
         if (restaurant.isEmpty()) {
             log.info("Restaurant with ID '{}' not found", id);
-            throw new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND);
+            throw new ItemNotFoundException(ErrorMessage.RESTAURANT_NOT_FOUND);
         }
         return restaurantMapper.entityToResponse(restaurant.get());
     }
@@ -47,7 +47,7 @@ public class RestaurantServiceImpl implements RestaurantService{
 
         if (restaurant.isPresent()) {
             log.info("Restaurant ID already used: {}", request.id());
-            throw new ItemExistException(ErrorMessage.ITEM_ALREADY_EXIST);
+            throw new ItemExistException(ErrorMessage.RESTAURANT_ALREADY_EXIST);
         }
 
         Restaurant newRestaurant = restaurantMapper.requestToEntity(request);
@@ -65,7 +65,7 @@ public class RestaurantServiceImpl implements RestaurantService{
         Optional<Restaurant> restaurant = restaurantRepository.findById(id);
         if (restaurant.isEmpty()) {
             log.info("Failed to update restaurant with ID '{}': Restaurant does not exist.", id);
-            throw new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND);
+            throw new ItemNotFoundException(ErrorMessage.RESTAURANT_NOT_FOUND);
         }
         Restaurant updatedRestaurant = restaurant.get();
         restaurantMapper.update(updatedRestaurant, request);
@@ -80,7 +80,7 @@ public class RestaurantServiceImpl implements RestaurantService{
         Optional<Restaurant> restaurant = restaurantRepository.findById(id);
         if (restaurant.isEmpty()) {
             log.info("Failed to update average score, restaurant with ID '{}': Restaurant does not exist.", id);
-            throw new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND);
+            throw new ItemNotFoundException(ErrorMessage.RESTAURANT_NOT_FOUND);
         }
 
         Restaurant updatedRestaurant = restaurant.get();
@@ -117,7 +117,7 @@ public class RestaurantServiceImpl implements RestaurantService{
         Optional<Restaurant> restaurant = restaurantRepository.findById(id);
         if (restaurant.isEmpty()) {
             log.info("Failed to delete restaurant with ID '{}': Restaurant does not exist.", id);
-            throw new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND);
+            throw new ItemNotFoundException(ErrorMessage.RESTAURANT_NOT_FOUND);
         }
         restaurantRepository.deleteById(id);
         log.info("Restaurant has been deleted: {}", restaurant);

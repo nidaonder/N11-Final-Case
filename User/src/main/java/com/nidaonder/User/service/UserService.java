@@ -9,4 +9,5 @@ import com.nidaonder.User.entity.User;
 
 public interface UserService extends BaseService<User, UserSaveRequest, UserUpdateRequest, UserResponse> {
     UserResponse updatePassword(Long id, UserUpdatePasswordRequest request);
+    void checkUserExists(Long id);
 }

@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> user = userRepository.findById(id);
         if (user.isEmpty()) {
             log.info("User with ID '{}' not found", id);
-            throw new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND);
+            throw new ItemNotFoundException(ErrorMessage.USER_NOT_FOUND);
         }
         return userMapper.entityToResponse(user.get());
     }
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> user = userRepository.findByEmail(request.email());
         if(user.isPresent()){
             log.info("User e-mail address already used: {}", request.email());
-            throw new ItemExistException(ErrorMessage.ITEM_ALREADY_EXIST);
+            throw new ItemExistException(ErrorMessage.USER_ALREADY_EXIST);
         }
         User newUser = userMapper.requestToEntity(request);
         newUser.setStatus(Status.ACTIVE);
@@ -61,13 +61,13 @@ public class UserServiceImpl implements UserService {
         Optional<User> user = userRepository.findById(id);
         if(user.isEmpty()){
             log.info("Failed to update user with ID '{}': User does not exist.", id);
-            throw new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND);
+            throw new ItemNotFoundException(ErrorMessage.USER_NOT_FOUND);
         }
 
         Optional<User> userByEmail = userRepository.findByEmail(request.email());
         if(userByEmail.isPresent() && !userByEmail.get().getId().equals(id)){
             log.info("Failed to update user with ID '{}': E-mail '{}' is already used by another user.", id, request.email());
-            throw new ItemExistException(ErrorMessage.ITEM_ALREADY_EXIST);
+            throw new ItemExistException(ErrorMessage.EMAIL_ALREADY_IN_USE);
         }
 
         User updatedUser = user.get();
@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> user = userRepository.findById(id);
         if (user.isEmpty()){
             log.info("Failed to update user with ID '{}': User does not exist.", id);
-            throw new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND);
+            throw new ItemNotFoundException(ErrorMessage.USER_NOT_FOUND);
         }
         if (!user.get().getPassword().equals(request.oldPassword())){
             log.info("Update password failed for user with ID '{}': The current password is incorrect.", id);
@@ -108,9 +108,18 @@ public class UserServiceImpl implements UserService {
         Optional<User> user = userRepository.findById(id);
         if(user.isEmpty()){
             log.info("Failed to delete user with ID '{}': User does not exist.", id);
-            throw new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND);
+            throw new ItemNotFoundException(ErrorMessage.USER_NOT_FOUND);
         }
         userRepository.deleteById(id);
         log.info("User has been deleted: {}", user);
+    }
+
+    @Override
+    public void checkUserExists(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isEmpty()) {
+            log.info("User with ID '{}' not found", id);
+            throw new ItemNotFoundException(ErrorMessage.USER_NOT_FOUND);
+        }
     }
 }
