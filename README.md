@@ -15,7 +15,12 @@ with our services efficiently and effectively.
 
 * The user service uses PostgreSQL as its database and is developed as a backend application with Spring Boot.
 
+## Getting Started
 
+* in N11FinalCase root folder 
+* run "docker-compose up"
+* restaurant http://localhost:8080/swagger-ui/index.html#/
+* user http://localhost:8081/swagger-ui/index.html#/
 
 ## Restaurant Service
 * Operations for saving, deleting, updating, and reading **RESTAURANTS** are performed.

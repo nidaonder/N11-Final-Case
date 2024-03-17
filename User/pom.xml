@@ -14,7 +14,7 @@
 	<name>UserService</name>
 	<description>N11-User-Service</description>
 	<properties>
-		<java.version>21</java.version>
+		<java.version>17</java.version>
 		<org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
 		<spring-cloud.version>2023.0.0</spring-cloud.version>
 	</properties>

@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  restaurant:
+    image: nidaaonder/n11:restaurant
+    depends_on:
+      - solr
+    environment:
+      - SOLR_URL=http://solr:8983/solr/restaurant
+    ports:
+      - "8080:8080"
+
+  solr:
+    image: solr:latest
+    ports:
+      - "8983:8983"
+    volumes:
+      - solr_data:/var/solr/data
+    command:
+      - solr-create
+      - -c mycore
+      - -p 8983
+
+  user:
+    image: nidaaonder/n11:user
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=jdbc:postgresql://localhost:5432/user-service
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+    ports:
+      - "8081:8081"
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: user-service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  solr_data:
+  pgdata:
