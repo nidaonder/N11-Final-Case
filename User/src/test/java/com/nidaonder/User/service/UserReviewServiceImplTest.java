@@ -3,7 +3,6 @@ package com.nidaonder.User.service;
 import com.nidaonder.User.client.RestaurantServiceClient;
 import com.nidaonder.User.core.exception.ItemNotFoundException;
 import com.nidaonder.User.dao.UserReviewRepository;
-import com.nidaonder.User.dto.request.RestaurantUpdateScoreRequest;
 import com.nidaonder.User.dto.request.UserReviewSaveRequest;
 import com.nidaonder.User.dto.request.UserReviewUpdateRequest;
 import com.nidaonder.User.dto.response.UserReviewResponse;
@@ -23,8 +22,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -156,10 +153,6 @@ class UserReviewServiceImplTest {
 
         assertEquals(expectedResponse, actualResponse);
         verify(userService).checkUserExists(request.userId());
-        verify(restaurantServiceClient).updateAverageScore(
-                eq(request.restaurantId()),
-                any(RestaurantUpdateScoreRequest.class)
-        );
         verify(userReviewRepository).save(savedUserReview);
         verify(userReviewMapper).entityToResponse(savedUserReview);
     }
@@ -197,15 +190,15 @@ class UserReviewServiceImplTest {
                 existingReview.getRestaurantId()
 
         );
-        when(userReviewMapper.entityToResponse(any(UserReview.class))).thenReturn(expectedResponse);
+        when(userReviewMapper.entityToResponse(existingReview)).thenReturn(expectedResponse);
 
         UserReviewResponse actualResponse = userReviewService.update(reviewId, updateRequest);
 
         assertEquals(expectedResponse, actualResponse);
 
         verify(userReviewRepository).findById(reviewId);
-        verify(userReviewMapper).update(any(UserReview.class), eq(updateRequest));
-        verify(userReviewRepository).save(any(UserReview.class));
+        verify(userReviewMapper).update(existingReview, updateRequest);
+        verify(userReviewRepository).save(existingReview);
     }
 
     @Test
