@@ -57,6 +57,8 @@ public class UserControllerIntegrationTest {
                 10.0,
                 10.0);
 
+        testRestTemplate.postForEntity("http://localhost:" + port + "/api/v1/users", request, String.class);
+
         ResponseEntity<String> response = testRestTemplate.postForEntity("http://localhost:" + port + "/api/v1/users", request, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
