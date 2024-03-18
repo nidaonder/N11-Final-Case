@@ -15,6 +15,8 @@ with our services efficiently and effectively.
 
 * The user service uses PostgreSQL as its database and is developed as a backend application with Spring Boot.
 
+* Loom video where I summarize the project : https://www.loom.com/share/15e164ac0a2d477a9855e71c57b68abf?sid=95a90877-c4f5-46c6-87e3-ab4d643954de
+
 ## Getting Started
 
 * in N11FinalCase root folder 
