@@ -17,9 +17,8 @@ services:
     volumes:
       - solr_data:/var/solr/data
     command:
-      - solr-create
-      - -c mycore
-      - -p 8983
+      - solr-precreate
+      - restaurant
 
   user:
     image: nidaaonder/n11:user
